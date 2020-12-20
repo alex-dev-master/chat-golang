@@ -1,11 +1,20 @@
 package repository
 
-import "github.com/jmoiron/sqlx"
+import (
+	"github.com/alex-dev-master/chat-golang/pkg/model"
+	"github.com/jmoiron/sqlx"
+)
+
+type Authorization interface {
+	CreateUser(user model.User) (int64, error)
+}
 
 type Repository struct {
-
+	Authorization
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
-	return &Repository{}
+	return &Repository{
+		Authorization: NewAuth(db),
+	}
 }
