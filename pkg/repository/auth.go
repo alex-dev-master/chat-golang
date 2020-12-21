@@ -31,3 +31,10 @@ func (r *Auth) CreateUser(user model.User) (int64, error) {
 	return id, nil
 }
 
+func (r *Auth) GetUser(email, password string) (model.User, error) {
+	var user model.User
+	query := fmt.Sprintf("SELECT id FROM %s WHERE email=? AND password=?", "users")
+	err := r.db.Get(&user, query, email, password)
+
+	return user, err
+}
