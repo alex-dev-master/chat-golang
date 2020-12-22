@@ -30,6 +30,12 @@ func (h *Handler) InitRoutes() *gin.Engine {
 				"test": "norm",
 			})
 		})
+
+		rubrics := api.Group("/chat-rubrics")
+		{
+			rubrics.POST("/", h.createChatRubric)
+			rubrics.GET("/", h.getChatRubrics)
+		}
 	}
 
 	return router

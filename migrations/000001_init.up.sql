@@ -9,3 +9,12 @@ CREATE TABLE `golang_example`.`users`
     `disabled`   BOOLEAN      NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
+CREATE TABLE `golang_example`.`chat_rubrics`
+(
+    `id`       INT          NOT NULL AUTO_INCREMENT,
+    `user_id`  INT          NOT NULL,
+    `caption`  VARCHAR(100) NOT NULL,
+    `disabled` BOOLEAN      NOT NULL,
+    PRIMARY KEY (`id`)
+) ENGINE = InnoDB;

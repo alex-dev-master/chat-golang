@@ -11,12 +11,18 @@ type Authorization interface {
 
 }
 
+type ChatRubric interface {
+	CreateRubric(rubric model.ChatRubric) (int64, error)
+}
+
 type Repository struct {
 	Authorization
+	ChatRubric
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuth(db),
+		ChatRubric: NewChatRubric(db),
 	}
 }
