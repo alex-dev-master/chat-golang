@@ -7,6 +7,10 @@ import (
 	"net/http"
 )
 
+type getAllChatRubricsResponse struct {
+	Result []model.ChatRubricUser `json:"result"`
+}
+
 func (h *Handler) createChatRubric(c *gin.Context) {
 	userId, err := getUserId(c)
 	if err != nil {
@@ -31,5 +35,13 @@ func (h *Handler) createChatRubric(c *gin.Context) {
 }
 
 func (h *Handler) getChatRubrics(c *gin.Context) {
+	rubrics, err := h.services.ChatRubric.GetAll()
+	if err != nil {
+		utils.NewErrorResponse(c, http.StatusInternalServerError, err.Error())
+		return
+	}
 
+	c.JSON(http.StatusOK, getAllChatRubricsResponse{
+		Result: rubrics,
+	})
 }

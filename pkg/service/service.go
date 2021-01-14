@@ -13,6 +13,7 @@ type Authorization interface {
 
 type ChatRubric interface {
 	Create(rubric model.ChatRubric) (int64, error)
+	GetAll() ([]model.ChatRubricUser, error)
 }
 
 type Service struct {

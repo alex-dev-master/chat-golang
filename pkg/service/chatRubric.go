@@ -16,3 +16,7 @@ func NewChatRubricService(repo repository.ChatRubric) *ChatRubricService {
 func (s *ChatRubricService) Create(rubric model.ChatRubric) (int64, error) {
 	return s.repo.CreateRubric(rubric)
 }
+
+func (s *ChatRubricService) GetAll() ([]model.ChatRubricUser, error)  {
+	return s.repo.GetRubrics()
+}

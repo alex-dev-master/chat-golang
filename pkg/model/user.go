@@ -6,6 +6,6 @@ type User struct {
 	FirstName string `json:"first_name" binding:"required"`
 	Email string `json:"email" binding:"required"`
 	Password  string `json:"password" binding:"required"`
-	Token  string `json:"token" binding:"required"`
-	Disabled  string `json:"disabled" binding:"required"`
+	Token  string `json:"token"`
+	Disabled  string `json:"disabled"`
 }

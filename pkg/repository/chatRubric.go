@@ -37,3 +37,13 @@ func (r *ChatRubricRepository) CreateRubric(rubric model.ChatRubric) (int64, err
 	return id, tx.Commit()
 
 }
+
+func (r *ChatRubricRepository) GetRubrics() ([]model.ChatRubricUser, error) {
+	var items []model.ChatRubricUser
+	query := "SELECT * FROM `chat_rubrics` LEFT JOIN `users` on `chat_rubrics`.`user_id`=`users`.`id`"
+	if err := r.db.Select(&items, query); err != nil {
+		return nil, err
+	}
+
+	return items, nil
+}
