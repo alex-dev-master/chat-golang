@@ -15,6 +15,6 @@ type ChatRubricUser struct {
 	FirstName string `json:"first_name" db:"first_name" binding:"required"`
 	LastName  string `json:"last_name" db:"last_name" binding:"required"`
 	Email string `json:"email" binding:"required"`
-	Password  string `json:"password" binding:"required"`
-	Token  string `json:"token"`
+	Password  string `json:"-"`
+	Token  string `json:"-"`
 }
