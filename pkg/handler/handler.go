@@ -36,6 +36,13 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			rubrics.POST("/", h.createChatRubric)
 			rubrics.GET("/", h.getChatRubrics)
 		}
+
+		messages := api.Group("/messages")
+		{
+			messages.POST("/:rubric", h.createMessage)
+			//messages.GET("/:rubric", h.getChatRubrics)
+		}
+
 	}
 
 	return router

@@ -16,14 +16,20 @@ type ChatRubric interface {
 	GetAll() ([]model.ChatRubricUser, error)
 }
 
+type Message interface {
+	Create(message model.Message) (int, error)
+}
+
 type Service struct {
 	Authorization
 	ChatRubric
+	Message
 }
 
 func NewService(repos *repository.Repository) *Service  {
 	return &Service{
 		Authorization: NewAuthService(repos.Authorization),
 		ChatRubric: NewChatRubricService(repos.ChatRubric),
+		Message: NewMessageService(repos.Message),
 	}
 }

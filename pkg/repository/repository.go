@@ -16,14 +16,20 @@ type ChatRubric interface {
 	GetRubrics() ([]model.ChatRubricUser, error)
 }
 
+type Message interface {
+	CreateMessage(message model.Message) (int, error)
+}
+
 type Repository struct {
 	Authorization
 	ChatRubric
+	Message
 }
 
 func NewRepository(db *sqlx.DB) *Repository {
 	return &Repository{
 		Authorization: NewAuth(db),
 		ChatRubric: NewChatRubric(db),
+		Message: NewMessage(db),
 	}
 }
