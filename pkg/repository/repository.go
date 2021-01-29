@@ -18,6 +18,7 @@ type ChatRubric interface {
 
 type Message interface {
 	CreateMessage(message model.Message) (int, error)
+	GetAllOfRubric(rubric int) ([]model.MessageWithUser, error)
 }
 
 type Repository struct {

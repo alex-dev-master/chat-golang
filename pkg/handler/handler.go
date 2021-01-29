@@ -40,7 +40,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 		messages := api.Group("/messages")
 		{
 			messages.POST("/:rubric", h.createMessage)
-			//messages.GET("/:rubric", h.getChatRubrics)
+			messages.GET("/:rubric", h.getMessages)
 		}
 
 	}

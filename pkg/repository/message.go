@@ -36,3 +36,13 @@ func (r *MessageRepository) CreateMessage(message model.Message) (int, error) {
 
 	return int(id), tx.Commit()
 }
+
+func (r *MessageRepository) GetAllOfRubric(rubric int) ([]model.MessageWithUser, error) {
+	var items []model.MessageWithUser
+	query := "SELECT * FROM `messages` LEFT JOIN `users` on `messages`.`user_id`=`users`.`id` WHERE `messages`.`chat_rubric_id` = ?"
+	if err := r.db.Select(&items, query, rubric); err != nil {
+		return nil, err
+	}
+
+	return items, nil
+}

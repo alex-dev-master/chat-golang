@@ -16,3 +16,7 @@ func NewMessageService(repo repository.Message) *MessageService {
 func (s *MessageService) Create(message model.Message) (int, error) {
 	return s.repo.CreateMessage(message)
 }
+
+func (s *MessageService) GetAllOfRubric(rubric int) ([]model.MessageWithUser, error)  {
+	return s.repo.GetAllOfRubric(rubric)
+}
