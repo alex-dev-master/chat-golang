@@ -18,3 +18,22 @@ CREATE TABLE `golang_example`.`chat_rubrics`
     `disabled` BOOLEAN      NOT NULL,
     PRIMARY KEY (`id`)
 ) ENGINE = InnoDB;
+
+
+CREATE TABLE `messages`
+(
+    `id`             int(11)                         NOT NULL,
+    `user_id`        int(11)                         NOT NULL,
+    `chat_rubric_id` int(11)                         NOT NULL,
+    `content`        text COLLATE utf8mb4_unicode_ci NOT NULL,
+    `created`        datetime                        NOT NULL,
+    `disabled`       tinyint(1)                      NOT NULL
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4
+  COLLATE = utf8mb4_unicode_ci;
+
+ALTER TABLE `messages`
+    ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `messages`
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;

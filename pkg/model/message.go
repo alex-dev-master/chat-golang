@@ -8,6 +8,6 @@ type Message struct {
 	ChatRubric int    `json:"chat_rubric_id" db:"chat_rubric_id"`
 	Content    string `json:"content" binding:"required"`
 	Created    time.Time  `json:"created"`
-	Disabled   string `json:"disabled"`
+	Disabled   bool `json:"disabled"`
 }
 
