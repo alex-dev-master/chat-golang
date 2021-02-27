@@ -1,3 +1,5 @@
+CREATE DATABASE IF NOT EXISTS golang_example;
+
 CREATE TABLE `golang_example`.`users`
 (
     `id`         INT          NOT NULL AUTO_INCREMENT,
