@@ -1,8 +1,1 @@
 port: "8080"
-#
-#db:
-#  username: "root"
-#  host: "localhost"
-#  port: "3306"
-#  dbname: "golang_example"
-#  sslmode: "disable"
