@@ -12,4 +12,6 @@ If the application starts for the first time, you need to apply migrations to th
 make migrate
 ```
 
+Don't forget to add the .env file before starting
+
 ### Migration information: [link](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate)
