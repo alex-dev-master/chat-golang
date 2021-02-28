@@ -1,8 +1,15 @@
 # Example of chat structure on Golang.
 
-[migration download link](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate)
+### To run the application with docker:
 
-### example of starting migration: 
+```
+make build && make run
+```
 
-migrate -path ./migrations -database 'mysql://root@tcp(localhost:3306)/golang_example' up
+If the application starts for the first time, you need to apply migrations to the database:
 
+```
+make migrate
+```
+
+### Migration information: [link](https://github.com/golang-migrate/migrate/tree/master/cmd/migrate)
