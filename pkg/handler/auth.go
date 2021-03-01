@@ -50,3 +50,18 @@ func (h *Handler) signIn(c *gin.Context)  {
 		"token": token,
 	})
 }
+
+type refreshInput struct {
+	RefreshToken string `json:"refresh_token" binding:"required"`
+}
+
+func (h Handler) refreshToken(c *gin.Context)  {
+	var input *refreshInput
+	if err := c.BindJSON(&input); err != nil {
+		utils.NewErrorResponse(c, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	h.services.Authorization.RefreshToken(input.RefreshToken)
+
+}

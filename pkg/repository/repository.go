@@ -8,7 +8,8 @@ import (
 type Authorization interface {
 	CreateUser(user model.User) (int64, error)
 	GetUser(username, password string) (model.User, error)
-
+	UpdateRefreshToken() error
+	GetByRefreshToken(refresh_token) error
 }
 
 type ChatRubric interface {

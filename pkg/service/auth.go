@@ -7,12 +7,13 @@ import (
 	"github.com/alex-dev-master/chat-golang/pkg/model"
 	"github.com/alex-dev-master/chat-golang/pkg/repository"
 	"github.com/dgrijalva/jwt-go"
+	"github.com/spf13/viper"
+	"math/rand"
 	"time"
 )
 
 const (
 	salt       = "hjqrhjqw124617ajfhajs"
-	tokenTTL   = 12 * time.Hour
 	signingKey = "qrkjk#4#%35FSFJlja#4353KSFjH"
 )
 
@@ -41,15 +42,34 @@ func (s *AuthService) GenerateToken(username, password string) (string, error) {
 		return "", err
 	}
 
+	accessTokenTTLStr := viper.GetString("auth.accessTokenTTL")
+	accessTokenTTL, _ := time.ParseDuration(accessTokenTTLStr)
+
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
 		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(tokenTTL).Unix(),
+			ExpiresAt: time.Now().Add(accessTokenTTL).Unix(),
 			IssuedAt:  time.Now().Unix(),
 		},
 		user.Id,
 	})
 
 	return token.SignedString([]byte(signingKey))
+}
+
+func (s *AuthService) RefreshToken(refreshToken string) (string, error) {
+	b := make([]byte, 32)
+
+	a := rand.NewSource(time.Now().Unix())
+	r := rand.New(a)
+
+	_, err := r.Read(b)
+	if err != nil {
+		return "", err
+	}
+
+	s.repo.GetByRefreshToken(refreshToken)
+
+	return fmt.Sprintf("%x", b), nil
 }
 
 func (s *AuthService) ParseToken(accessToken string) (int, error) {

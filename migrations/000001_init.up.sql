@@ -39,3 +39,6 @@ ALTER TABLE `messages`
 
 ALTER TABLE `messages`
     MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+ALTER TABLE `users` ADD `expired_token` DATETIME NOT NULL AFTER `token`;

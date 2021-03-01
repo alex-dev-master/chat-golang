@@ -38,3 +38,15 @@ func (r *Auth) GetUser(email, password string) (model.User, error) {
 
 	return user, err
 }
+
+func (r Auth) UpdateRefreshToken()  {
+	
+}
+
+func (r Auth) GetByRefreshToken(refresh_token) (model.User, error) {
+	var user model.User
+	query := fmt.Sprintf("SELECT id FROM %s WHERE refresh_token=?", "users")
+	err := r.db.Get(&user, query, email, password)
+
+	return user, err
+}

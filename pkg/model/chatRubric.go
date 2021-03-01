@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type ChatRubric struct {
 	Id       int    `json:"id" db:"id"`
 	UserId   int    `json:"user_id" db:"user_id"`
@@ -16,5 +18,6 @@ type ChatRubricUser struct {
 	LastName  string `json:"last_name" db:"last_name" binding:"required"`
 	Email     string `json:"email" binding:"required"`
 	Password  string `json:"-"`
-	Token     string `json:"-"`
+	Token     string `json:"token"`
+	ExpiredToken     time.Time  `json:"expired_token" db:"expired_token"`
 }

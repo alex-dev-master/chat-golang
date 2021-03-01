@@ -1,1 +1,6 @@
-port: "8080"
+http:
+  port: 8080
+
+auth:
+  accessTokenTTL: 20m
+  refreshTokenTTL: 20m
