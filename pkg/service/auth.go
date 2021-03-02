@@ -35,41 +35,55 @@ func (s *AuthService) CreateUser(user model.User) (int64, error) {
 	return s.repo.CreateUser(user)
 }
 
-
-func (s *AuthService) GenerateToken(username, password string) (string, error) {
-	user, err := s.repo.GetUser(username, generatePasswordHash(password))
-	if err != nil {
-		return "", err
-	}
-
-	accessTokenTTLStr := viper.GetString("auth.accessTokenTTL")
-	accessTokenTTL, _ := time.ParseDuration(accessTokenTTLStr)
-
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
-		jwt.StandardClaims{
-			ExpiresAt: time.Now().Add(accessTokenTTL).Unix(),
-			IssuedAt:  time.Now().Unix(),
-		},
-		user.Id,
-	})
-
-	return token.SignedString([]byte(signingKey))
+func (s *AuthService) GetUser(username, password string) (model.User, error) {
+	return s.repo.GetUser(username, generatePasswordHash(password))
 }
 
-func (s *AuthService) RefreshToken(refreshToken string) (string, error) {
-	b := make([]byte, 32)
+func (s *AuthService) GenerateToken(user model.User) (string, error) {
+	return getNewAccessToken(user.Id)
+}
 
-	a := rand.NewSource(time.Now().Unix())
-	r := rand.New(a)
-
-	_, err := r.Read(b)
+func (s *AuthService) CreateRefreshToken(user model.User) (string, error) {
+	newRefreshToken, err := getNewRefreshToken()
 	if err != nil {
 		return "", err
 	}
 
-	s.repo.GetByRefreshToken(refreshToken)
+	err = s.repo.UpdateRefreshToken(user, newRefreshToken)
+	if err != nil {
+		return "", err
+	}
 
-	return fmt.Sprintf("%x", b), nil
+	return newRefreshToken, err
+}
+
+func (s *AuthService) RefreshAccessToken(refreshToken string) (string, error) {
+
+	user, err := s.repo.GetByRefreshToken(refreshToken)
+	if err != nil {
+		return "", err
+	}
+
+	//layout := "2021-03-02T17:20:03Z"
+	t, err := time.Parse(time.RFC3339, user.ExpiredToken)
+	//fmt.Println("t", t)
+	//fmt.Println("t UNIX", t.Unix())
+	timeExp := t.UTC().Unix()
+	if err != nil {
+		return "", err
+	}
+
+	now := makeTimestamp()
+
+	fmt.Println("now", now)
+	fmt.Println("UnixNano", timeExp)
+
+	if (now < timeExp) {
+		fmt.Println("ok")
+	}
+	//newAccessToken := getNewAccessToken(user.Id)
+
+	return getNewAccessToken(user.Id)
 }
 
 func (s *AuthService) ParseToken(accessToken string) (int, error) {
@@ -92,10 +106,43 @@ func (s *AuthService) ParseToken(accessToken string) (int, error) {
 	return claims.UserId, nil
 }
 
+func getNewAccessToken(userId int) (string, error)  {
+	accessTokenTTLStr := viper.GetString("auth.accessTokenTTL")
+	accessTokenTTL, _ := time.ParseDuration(accessTokenTTLStr)
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &tokenClaims{
+		jwt.StandardClaims{
+			ExpiresAt: time.Now().Add(accessTokenTTL).Unix(),
+			IssuedAt:  time.Now().Unix(),
+		},
+		userId,
+	})
+
+	return token.SignedString([]byte(signingKey))
+}
+
+func getNewRefreshToken() (string, error)  {
+	b := make([]byte, 32)
+
+	a := rand.NewSource(time.Now().Unix())
+	r := rand.New(a)
+
+	_, err := r.Read(b)
+	if err != nil {
+		return "", err
+	}
+
+	return fmt.Sprintf("%x", b), nil
+}
 
 func generatePasswordHash(password string) string {
 	hash := sha1.New()
 	hash.Write([]byte(password))
 
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
+}
+
+func makeTimestamp() int64 {
+	now := time.Now()
+	return now.UTC().Unix()
 }

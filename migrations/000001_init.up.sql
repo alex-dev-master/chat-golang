@@ -42,3 +42,4 @@ ALTER TABLE `messages`
 
 
 ALTER TABLE `users` ADD `expired_token` DATETIME NOT NULL AFTER `token`;
+ALTER TABLE `users` CHANGE `token` `token` VARCHAR(255) NULL DEFAULT NULL;

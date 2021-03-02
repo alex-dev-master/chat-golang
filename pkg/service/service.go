@@ -7,8 +7,10 @@ import (
 
 type Authorization interface {
 	CreateUser(user model.User) (int64, error)
-	GenerateToken(username, password string) (string, error)
-	RefreshToken(refresh_token string) (string, error)
+	GetUser(username, password string) (model.User, error)
+	GenerateToken(user model.User) (string, error)
+	CreateRefreshToken(user model.User) (string, error)
+	RefreshAccessToken(refreshToken string) (string, error)
 	ParseToken(token string) (int, error)
 }
 

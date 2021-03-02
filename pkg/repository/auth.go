@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/alex-dev-master/chat-golang/pkg/model"
 	"github.com/jmoiron/sqlx"
+	"github.com/spf13/viper"
+	"time"
 )
 
 type Auth struct {
@@ -39,14 +41,23 @@ func (r *Auth) GetUser(email, password string) (model.User, error) {
 	return user, err
 }
 
-func (r Auth) UpdateRefreshToken()  {
-	
-}
-
-func (r Auth) GetByRefreshToken(refresh_token) (model.User, error) {
+func (r *Auth) GetByRefreshToken(refreshToken string) (model.User, error) {
 	var user model.User
-	query := fmt.Sprintf("SELECT id FROM %s WHERE refresh_token=?", "users")
-	err := r.db.Get(&user, query, email, password)
+	query := fmt.Sprintf("SELECT * FROM %s WHERE token=?", "users")
+	err := r.db.Get(&user, query, refreshToken)
 
 	return user, err
+}
+
+func (r *Auth) UpdateRefreshToken(user model.User, refreshToken string) error {
+	refreshTokenTTLStr := viper.GetString("auth.refreshTokenTTL")
+	refreshTokenTTL, _ := time.ParseDuration(refreshTokenTTLStr)
+	var now time.Time
+	now = time.Now()
+	timeExpired := now.Add(time.Minute + refreshTokenTTL).Format("2006-01-02 15:04:01")
+
+	query := fmt.Sprintf("UPDATE %s SET token=?, expired_token=? WHERE id=?", "users")
+	_, err := r.db.Exec(query, refreshToken, timeExpired, user.Id)
+
+	return err
 }
