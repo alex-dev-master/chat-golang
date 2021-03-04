@@ -7,6 +7,6 @@ type User struct {
 	Email        string `json:"email" binding:"required"`
 	Password     string `json:"password" binding:"required"`
 	Token        string `json:"token" db:"token"`
-	ExpiredToken string `json:"expired_token" db:"expired_token"`
+	ExpiredToken int64 `json:"expired_token" db:"expired_token"`
 	Disabled     string `json:"disabled"`
 }

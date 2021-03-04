@@ -2,5 +2,5 @@ http:
   port: 8080
 
 auth:
-  accessTokenTTL: 20m
-  refreshTokenTTL: 20m
+  accessTokenTTL: 15m
+  refreshTokenTTL: 43200m #30 days

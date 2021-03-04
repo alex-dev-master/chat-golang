@@ -72,6 +72,13 @@ func (h Handler) refreshToken(c *gin.Context)  {
 		return
 	}
 
-	h.services.Authorization.RefreshAccessToken(input.RefreshToken)
+	accessToken, err := h.services.Authorization.RefreshAccessToken(input.RefreshToken)
+	if err != nil {
+		utils.NewErrorResponse(c, http.StatusUnauthorized, err.Error())
+		return
+	}
 
+	c.JSON(http.StatusOK, map[string]interface{}{
+		"token": accessToken,
+	})
 }

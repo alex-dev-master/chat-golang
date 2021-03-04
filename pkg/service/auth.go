@@ -64,24 +64,10 @@ func (s *AuthService) RefreshAccessToken(refreshToken string) (string, error) {
 		return "", err
 	}
 
-	//layout := "2021-03-02T17:20:03Z"
-	t, err := time.Parse(time.RFC3339, user.ExpiredToken)
-	//fmt.Println("t", t)
-	//fmt.Println("t UNIX", t.Unix())
-	timeExp := t.UTC().Unix()
-	if err != nil {
-		return "", err
+	now := time.Now().Unix()
+	if now > user.ExpiredToken {
+		return "", errors.New("refresh token expired")
 	}
-
-	now := makeTimestamp()
-
-	fmt.Println("now", now)
-	fmt.Println("UnixNano", timeExp)
-
-	if (now < timeExp) {
-		fmt.Println("ok")
-	}
-	//newAccessToken := getNewAccessToken(user.Id)
 
 	return getNewAccessToken(user.Id)
 }
@@ -106,7 +92,7 @@ func (s *AuthService) ParseToken(accessToken string) (int, error) {
 	return claims.UserId, nil
 }
 
-func getNewAccessToken(userId int) (string, error)  {
+func getNewAccessToken(userId int) (string, error) {
 	accessTokenTTLStr := viper.GetString("auth.accessTokenTTL")
 	accessTokenTTL, _ := time.ParseDuration(accessTokenTTLStr)
 
@@ -121,7 +107,7 @@ func getNewAccessToken(userId int) (string, error)  {
 	return token.SignedString([]byte(signingKey))
 }
 
-func getNewRefreshToken() (string, error)  {
+func getNewRefreshToken() (string, error) {
 	b := make([]byte, 32)
 
 	a := rand.NewSource(time.Now().Unix())
@@ -140,9 +126,4 @@ func generatePasswordHash(password string) string {
 	hash.Write([]byte(password))
 
 	return fmt.Sprintf("%x", hash.Sum([]byte(salt)))
-}
-
-func makeTimestamp() int64 {
-	now := time.Now()
-	return now.UTC().Unix()
 }
